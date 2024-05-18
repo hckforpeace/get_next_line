@@ -6,7 +6,7 @@
 /*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 21:14:55 by pierre            #+#    #+#             */
-/*   Updated: 2024/04/30 21:20:35 by pierre           ###   ########.fr       */
+/*   Updated: 2024/05/18 15:34:40 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ char	*get_next_line(int fd)
 	static char	*buffer[1024];
 	char		*str;
 
-	if (read(fd, 0, 0))
-		return (NULL);
 	buffer[fd] = get_buffer_line(buffer[fd], fd);
 	str = get_line(buffer[fd]);
 	buffer[fd] = reset_buffer(buffer[fd]);
@@ -38,6 +36,12 @@ char	*get_buffer_line(char *buffer, int fd)
 	while (ft_strchr(buffer, '\n') == NULL)
 	{
 		ret = read(fd, str, BUFFER_SIZE);
+		if (ret < 0)
+		{
+			free(str);
+			free(buffer);
+			return (NULL);
+		}
 		str[ret] = '\0';
 		if (ret == 0)
 			break ;
