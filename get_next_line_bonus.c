@@ -18,7 +18,7 @@ char	*get_next_line(int fd)
 	char		*str;
 
 	buffer[fd] = get_buffer_line(buffer[fd], fd);
-	str = get_line(buffer[fd]);
+	str = get_line_mine(buffer[fd]);
 	buffer[fd] = reset_buffer(buffer[fd]);
 	return (str);
 }
@@ -51,7 +51,7 @@ char	*get_buffer_line(char *buffer, int fd)
 	return (buffer);
 }
 
-char	*get_line(char *buffer)
+char	*get_line_mine(char *buffer)
 {
 	char	*str;
 	int		n;
@@ -104,3 +104,16 @@ char	*reset_buffer(char	*buffer)
 	free(buffer);
 	return (new);
 }
+/* #define FILE_NAME "fchier.txt"
+#include <fcntl.h>
+
+int	main()
+{
+	int fd = open(FILE_NAME, O_RDONLY);
+	char *str;
+	do{
+		str = get_next_line(fd);
+	}while (str != NULL);
+
+	return (0);
+} */

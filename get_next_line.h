@@ -33,7 +33,7 @@ char	*ft_bzero(char *s, int len);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 t_list	*ft_lstnew(void *content, int len);
 void	ft_lstclear(t_list **lst);
-t_list	*add_node(t_list *lst, int len, char *buffer);
+int		add_node(t_list **lst, int len, char *buffer);
 char	*get_string(t_list *lst);
 int		get_total_length(t_list *lst);
 int		ft_setter(char *buffer);

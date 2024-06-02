@@ -24,13 +24,15 @@ char	*get_next_line(int fd)
 	if (fd < 0)
 		return (NULL);
 	if (*buffer)
-		lst = add_node(lst, ft_setter(buffer), buffer);
+		add_node(&lst, ft_setter(buffer), buffer);
 	while (!contains_nextline(buffer) && ret > 0)
 	{
 		ft_bzero(buffer, BUFFER_SIZE);
 		ret = read(fd, buffer, BUFFER_SIZE);
-		if (ret > 0)
-			lst = add_node(lst, ret, buffer);
+		if (ret > 0 && !add_node(&lst, ret, buffer))
+			return (NULL);
+		if (ret < 0)
+			return (ft_lstclear(&lst), NULL);
 	}
 	str = get_string(lst);
 	ft_lstclear(&lst);
@@ -39,7 +41,7 @@ char	*get_next_line(int fd)
 	return (str);
 }
 
-t_list	*add_node(t_list *lst, int len, char *buffer)
+int	add_node(t_list **lst, int len, char *buffer)
 {
 	char	*str;
 	t_list	*new;
@@ -48,7 +50,7 @@ t_list	*add_node(t_list *lst, int len, char *buffer)
 	n = 0;
 	str = (char *)malloc(sizeof(char) * (len + 1));
 	if (str == NULL)
-		return (NULL);
+		return (ft_lstclear(lst), 0);
 	while (buffer[n])
 	{
 		str[n] = buffer[n];
@@ -56,8 +58,10 @@ t_list	*add_node(t_list *lst, int len, char *buffer)
 	}
 	str[n] = '\0';
 	new = ft_lstnew(str, len);
-	ft_lstadd_back(&lst, new);
-	return (lst);
+	if (!new)
+		return (ft_lstclear(lst), 0);
+	ft_lstadd_back(lst, new);
+	return (1);
 }
 
 int	contains_nextline(char *s)
@@ -110,3 +114,16 @@ int	ft_setter(char *buffer)
 	}
 	return (i);
 }
+/* #define FILE_NAME "fchier.txt"
+#include <fcntl.h>
+
+int	main()
+{
+	int fd = open(FILE_NAME, O_RDONLY);
+	char *str;
+	do{
+		str = get_next_line(fd);
+	}while (str != NULL);
+
+	return (0);
+} */
